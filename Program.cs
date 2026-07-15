@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using MUNAdmin.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<MUNAdminContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MUNAdminContext") ?? throw new InvalidOperationException("Connection string 'MUNAdminContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
