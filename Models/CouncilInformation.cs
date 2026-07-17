@@ -6,5 +6,8 @@ namespace MUNAdmin.Models
     {
         [Required]
         public required string CouncilName { get; set; }
+
+        public required string PrimaryColor { get; set; }
+        public required string SecondaryColor { get; set; }
     }
 }

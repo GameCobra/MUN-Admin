@@ -22,6 +22,32 @@ namespace MUNAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (!_context.MUNInstance.Any())
+            {
+                CouncilInformation council = new CouncilInformation
+                {
+                    CouncilName = "Security",
+                    PrimaryColor = "aaaaaa",
+                    SecondaryColor = "bbbbbb"
+                };
+
+                _context.MUNInstance.Add(new MUNInstance
+                {
+                    AdminUsername = "ADMIN",
+                    AdminPassword = "ADMINPASSWORD",
+                    MUNTitle = "TEST MUN",
+                    CouncilInformationList = new List<CouncilInformation> { council },
+                    DelegationList = new List<DelegationInstance> { new DelegationInstance
+                    {
+                        DelegationCountry = "Canada",
+                        CouncilList = new List<DelegationCouncil> { new DelegationCouncil
+                        {
+                            Council = council,
+                        } }
+                    } }
+                });
+                await _context.SaveChangesAsync();
+            }
             return View(await _context.MUNInstance.ToListAsync());
         }
 
@@ -52,7 +78,6 @@ namespace MUNAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,AdminUsername,AdminPassword,MUNTitle,MUNAccessCode")] MUNInstance mUNInstance)
         {
-            Debug.WriteLine(ModelState.ToList()[0]);
             if (ModelState.IsValid)
             {
                 _context.Add(mUNInstance);
