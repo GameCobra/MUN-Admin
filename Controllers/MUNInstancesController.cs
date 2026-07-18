@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MUNAdmin.Data;
 using MUNAdmin.Models;
+using NuGet.Protocol;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MUNAdmin.Controllers
 {
@@ -22,6 +24,8 @@ namespace MUNAdmin.Controllers
 
         public async Task<IActionResult> Index()
         {
+            
+
             if (!_context.MUNInstance.Any())
             {
                 CouncilInformation council = new CouncilInformation

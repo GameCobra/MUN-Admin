@@ -19,7 +19,7 @@ namespace MUNAdmin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult LoginAdmin()
         {
             return View();
         }
@@ -46,6 +46,57 @@ namespace MUNAdmin.Controllers
                 new Claim("Role", "Admin")
             };
 
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity)
+            );
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult LoginDelegate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginDelegate(DelegateLoginModel model)
+        {
+            //If the user did not input all the information required
+            if (!ModelState.IsValid)
+                return View(model);
+
+            //Check if the MUN level Access code corasponds to anything
+            MUNInstance? userMUN = await _context.MUNInstance.FirstOrDefaultAsync(x => x.MUNAccessCode == model.MUNAccessCode);
+
+            if (userMUN == null)
+            {
+                ModelState.AddModelError("Invalid Login", "The information you inputed does not corraspond to a valid account");
+                return View(model);
+            }
+
+            //Check if the Delegation level access code corasponds to a delegation
+            DelegationInstance? userDelegation = userMUN!.DelegationList.FirstOrDefault(x => x.DelegationAccsesCode == model.DelegationAccsesCode);
+
+            if (userDelegation == null)
+            {
+                ModelState.AddModelError("Invalid Login", "The information you inputed does not corraspond to a valid account");
+                return View(model);
+            }
+
+            //Create the claim cookie
+            var claims = new List<Claim>
+            {
+                new Claim("MUN ID", userMUN!.Id.ToString()),
+                //new Claim("Delegation ID", userDelegation!.)
+                new Claim("Role", "Admin")
+            };
+
+            //Give the user the claim cookie
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
             await HttpContext.SignInAsync(

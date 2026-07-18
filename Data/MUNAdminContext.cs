@@ -24,6 +24,8 @@ namespace MUNAdmin.Data
             modelBuilder.Entity<MUNInstance>()
                 .OwnsMany(m => m.DelegationList, delegation =>
                 {
+                    delegation.HasKey(d => d.Id);
+
                     delegation.OwnsMany(d => d.CouncilList, council =>
                     {
                         council.OwnsOne(c => c.Council);

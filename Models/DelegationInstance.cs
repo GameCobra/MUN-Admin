@@ -4,6 +4,8 @@ namespace MUNAdmin.Models
 {
     public class DelegationInstance
     {
+        public int Id { get; set; }
+
         [Required]
         public required string DelegationCountry { get; set; }
 
