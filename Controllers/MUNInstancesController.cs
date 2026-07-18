@@ -27,8 +27,8 @@ namespace MUNAdmin.Controllers
                 CouncilInformation council = new CouncilInformation
                 {
                     CouncilName = "Security",
-                    PrimaryColor = "aaaaaa",
-                    SecondaryColor = "bbbbbb"
+                    PrimaryColor = "4d92b3",
+                    SecondaryColor = "bdeaff"
                 };
 
                 _context.MUNInstance.Add(new MUNInstance
@@ -43,6 +43,7 @@ namespace MUNAdmin.Controllers
                         CouncilList = new List<DelegationCouncil> { new DelegationCouncil
                         {
                             Council = council,
+                            RequestedRebuttal = false
                         } }
                     } }
                 });

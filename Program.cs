@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MUNAdmin.Data;
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,12 @@ builder.Services.AddDbContext<MUNAdminContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/UserAccountManager/Login"; // redirect if not logged in
+    });
 
 var app = builder.Build();
 

@@ -1,6 +1,9 @@
 ﻿@model MUNAdmin.Models.DelegationInstance
 @{
-    string currentCouncil = "Security";
+    string currentMUNTitle = "Test MUN";
+    string currentCouncilName = "Security";
+    DelegationCouncil currentDelegationCouncil = Model.CouncilList.First(x => x.Council.CouncilName == currentCouncilName);
+    CouncilInformation currentCouncilInformation = currentDelegationCouncil.Council;
 }
 <head>
     <meta charset="UTF-8">
@@ -15,7 +18,7 @@
 
         .main-panel,
         .side-panel{
-            background: @(Model.CouncilList.First(x => x.Council.CouncilName == currentCouncil).Council.SecondaryColor);
+            background: #@currentCouncilInformation.SecondaryColor;
             border-radius:20px;
             padding:25px;
             min-height:500px;
@@ -36,7 +39,7 @@
         .card-button{
             height:140px;
             border:2px solid;
-            border-color: #ccc;
+            border-color: #@currentCouncilInformation.PrimaryColor;
             border-radius:15px;
             display:flex;
             justify-content:center;
@@ -48,13 +51,17 @@
 
         .card-button:hover{
             background: #00000010;
-            border: 3px solid;
-            border-color: #ccc;
+        }
+
+        .Request-Rebuttal-card-button{
+            height: 50px;
+            border: 4px solid;
+            border-color: #@(currentDelegationCouncil.RequestedRebuttal ? "26f007" : "d11d1d");
         }
     </style>
 </head>
 <body>
-
+    <h2 class="mb-4">@currentMUNTitle</h2>
     <div class="container py-5">
 
         <div class="row g-4">
@@ -63,14 +70,16 @@
             <div class="col-lg-8">
                 <div class="main-panel">
 
-                    <h2 class="mb-4">Title</h2>
+                    <h2 class="mb-4">@currentCouncilInformation.CouncilName</h2>
+
+                    <div class="row g-4 py-4">
+
+                        <div class="col-md-3">
+                            <div class="card-button Request-Rebuttal-card-button">Request Point</div>
+                        </div>
+                    </div>
 
                     <div class="row g-4">
-
-                        <div class="col-md-4">
-                            <div class="card-button">Request Point</div>
-                        </div>
-
                         <div class="col-md-4">
                             <div class="card-button">Button 2</div>
                         </div>

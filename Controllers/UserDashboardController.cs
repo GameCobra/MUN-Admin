@@ -16,5 +16,13 @@ namespace MUNAdmin.Controllers
         {
             return View(_context.MUNInstance.First(x => x.AdminUsername == "ADMIN").DelegationList.First(x => x.DelegationCountry == "Canada") );
         }
+
+        /*[HttpPost]
+        public async  Task<IActionResult> UserRequestRebutal()
+        {
+            await _context.MUNInstance.fi
+
+            RedirectToAction(nameof(Index));
+        }*/
     }
 }
