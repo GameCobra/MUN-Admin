@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MUNAdmin.Data;
+using MUNAdmin.Models;
+using MUNAdmin.Models.LoginModels;
+using System.Security.Claims;
 
 namespace MUNAdmin.Controllers
 {
@@ -17,12 +22,18 @@ namespace MUNAdmin.Controllers
             return View(_context.MUNInstance.First(x => x.AdminUsername == "ADMIN").DelegationList.First(x => x.DelegationCountry == "Canada") );
         }
 
-        /*[HttpPost]
-        public async  Task<IActionResult> UserRequestRebutal()
+        [HttpPost]
+        [Authorize]
+        public async  Task<IActionResult> UserRequestRebutal(bool desiredState, CouncilInformation council)
         {
-            await _context.MUNInstance.fi
+            if (User.FindFirstValue(LoginClaims.AdminRole) == LoginClaims.DelegationRole)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            MUNInstance munInstance = await _context.MUNInstance.FirstAsync(x => x.MUNAccessCode.ToString() == User.FindFirstValue(LoginClaims.MUNID));
+            DelegationInstance delegationInstance = munInstance.DelegationList.First(x => x.DelegationAccsesCode.ToString() == User.FindFirstValue(LoginClaims.DelegationID));
 
-            RedirectToAction(nameof(Index));
-        }*/
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

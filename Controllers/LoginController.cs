@@ -42,8 +42,8 @@ namespace MUNAdmin.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("MUN ID", AdminMUN!.Id.ToString()),
-                new Claim("Role", "Admin")
+                new Claim(LoginClaims.MUNID, AdminMUN!.Id.ToString()),
+                new Claim(LoginClaims.Role, LoginClaims.AdminRole)
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -91,9 +91,9 @@ namespace MUNAdmin.Controllers
             //Create the claim cookie
             var claims = new List<Claim>
             {
-                new Claim("MUN ID", userMUN!.Id.ToString()),
-                //new Claim("Delegation ID", userDelegation!.)
-                new Claim("Role", "Admin")
+                new Claim(LoginClaims.MUNID, userMUN!.Id.ToString()),
+                new Claim(LoginClaims.DelegationID, userDelegation!.Id.ToString()),
+                new Claim(LoginClaims.Role, LoginClaims.DelegationRole)
             };
 
             //Give the user the claim cookie

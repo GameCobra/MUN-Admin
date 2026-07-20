@@ -1,0 +1,33 @@
+﻿@model MUNAdmin.Models.LoginModels.DelegateLoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Login</h1>
+
+<h4>Login</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="LoginDelegate">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="MUNAccessCode" class="control-label"></label>
+                <input asp-for="MUNAccessCode" class="form-control" />
+                <span asp-validation-for="MUNAccessCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DelegationAccsesCode" class="control-label"></label>
+                <input asp-for="DelegationAccsesCode" class="form-control" />
+                <span asp-validation-for="DelegationAccsesCode" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="LoginAdmin" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
