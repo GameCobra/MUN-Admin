@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MUNAdmin.Data;
 using MUNAdmin.Models;
 using MUNAdmin.Models.LoginModels;
+using MUNAdmin.Services;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace MUNAdmin.Controllers
@@ -11,10 +13,12 @@ namespace MUNAdmin.Controllers
     public class UserDashboardController : Controller
     {
         private readonly MUNAdminContext _context;
+        private readonly UserServices _userServices;
 
-        public UserDashboardController(MUNAdminContext context)
+        public UserDashboardController(MUNAdminContext context, UserServices userServices)
         {
             _context = context;
+            _userServices = userServices;
         }
 
         public IActionResult Index()
@@ -24,14 +28,35 @@ namespace MUNAdmin.Controllers
 
         [HttpPost]
         [Authorize]
-        public async  Task<IActionResult> UserRequestRebutal(bool desiredState, CouncilInformation council)
+        public async  Task<IActionResult> UserRequestRebutal(string desiredStateStr, string councilName)
         {
-            if (User.FindFirstValue(LoginClaims.AdminRole) == LoginClaims.DelegationRole)
+            bool desiredState = desiredStateStr == "value" ? true : false;
+            Debug.WriteLine(desiredState);
+            //Remove the user if they are a admin account
+            if (User.FindFirstValue(LoginClaims.AdminRole) == LoginClaims.AdminRole)
             {
+                TempData["Error"] = "You are an Admin account, you can not request speaker points";
                 return RedirectToAction(nameof(Index));
             }
-            MUNInstance munInstance = await _context.MUNInstance.FirstAsync(x => x.MUNAccessCode.ToString() == User.FindFirstValue(LoginClaims.MUNID));
-            DelegationInstance delegationInstance = munInstance.DelegationList.First(x => x.DelegationAccsesCode.ToString() == User.FindFirstValue(LoginClaims.DelegationID));
+
+            //Gets their delegation instance if possible
+            DelegationInstance? delegationInstance = await _userServices.GetClaimDelegationInstanceOrDefault(User);
+            if (delegationInstance == null)
+            {
+                TempData["Error"] = "Can't find the specified MUN or delegation";
+                return RedirectToAction(nameof(Index));
+            }
+
+            DelegationCouncil? delegationCouncil = delegationInstance.CouncilList.FirstOrDefault(x => x.Council.CouncilName == councilName);
+            if (delegationCouncil == null)
+            {
+                TempData["Error"] = "Not a member of the specified council: " + councilName;
+                return RedirectToAction(nameof(Index));
+            }
+
+            delegationCouncil.RequestedRebuttal = desiredState;
+            await _context.SaveChangesAsync();
+
 
             return RedirectToAction(nameof(Index));
         }

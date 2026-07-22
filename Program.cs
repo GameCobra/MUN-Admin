@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MUNAdmin.Data;
+using MUNAdmin.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MUNAdminContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MUNAdminContext") ?? throw new InvalidOperationException("Connection string 'MUNAdminContext' not found.")));
@@ -14,6 +15,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Login/LoginAdmin"; // redirect if not logged in
     });
+
+builder.Services.AddScoped<UserServices>();
 
 var app = builder.Build();
 

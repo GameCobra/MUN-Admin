@@ -47,6 +47,7 @@
             font-size:1.2rem;
             transition:.2s;
             cursor:pointer;
+            background: #@currentCouncilInformation.SecondaryColor;
         }
 
         .card-button:hover{
@@ -65,7 +66,6 @@
     <div class="container py-5">
 
         <div class="row g-4">
-
             <!-- Left Panel -->
             <div class="col-lg-8">
                 <div class="main-panel">
@@ -75,7 +75,16 @@
                     <div class="row g-4 py-4">
 
                         <div class="col-md-3">
-                            <div class="card-button Request-Rebuttal-card-button">Request Point</div>
+                            <form asp-action="UserRequestRebutal">
+                                <div class="text-danger"></div>
+                                <input type="hidden" name="desiredStateStr" value="@(!currentDelegationCouncil.RequestedRebuttal)" />
+                                <input type="hidden" name="councilName" value="@currentCouncilName" />
+
+                                <div class="form-group">
+                                    <input type="submit" value="Request Point" class="card-button Request-Rebuttal-card-button">
+                                </div>
+                                
+                            </form>
                         </div>
                     </div>
 
