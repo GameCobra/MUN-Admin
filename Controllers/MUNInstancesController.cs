@@ -22,6 +22,7 @@ namespace MUNAdmin.Controllers
             _context = context;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             

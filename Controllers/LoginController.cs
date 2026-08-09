@@ -112,5 +112,12 @@ namespace MUNAdmin.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public IActionResult SelectLoginMethod()
+        {
+            return View();
+        }
+
     }
 }

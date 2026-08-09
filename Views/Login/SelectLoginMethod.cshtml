@@ -1,0 +1,67 @@
+﻿<head>
+    <style>
+        .menu-item {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #00000010;
+        }
+
+        .card-button {
+            height: 280px;
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: .2s;
+            cursor: pointer;
+            background: #ebebeb
+        }
+
+        .menu-link {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-4 offset-lg-4 text-center">
+                <h2 class="mb-4">Select a Login Method</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-lg-4 offset-lg-1">
+                <a asp-controller="Login" 
+                    asp-action="LoginDelegate" 
+                    class="menu-link card-button menu-item"
+                    asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]">
+
+                    <h3 class="text-center">Delegate Login</h3>
+
+                    <p class="text-center">Login this way if you are participating in a MUN</p>
+                </a>
+            </div>
+            <div class="col-lg-4 offset-lg-2">
+                <a asp-controller="Login" 
+                    asp-action="LoginAdmin" 
+                    class="menu-link card-button menu-item"
+                    asp-route-ReturnUrl="@Context.Request.Query["ReturnUrl"]">
+                    <h3 class="text-center">Admin Login</h3>
+
+                    <p class="text-center">Login this way if you are running a MUN</p>
+                </a>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</body>
