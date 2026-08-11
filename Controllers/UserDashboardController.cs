@@ -40,7 +40,7 @@ namespace MUNAdmin.Controllers
             }
 
             //Gets their delegation instance if possible
-            DelegationInstance? delegationInstance = await _userServices.GetClaimDelegationInstanceOrDefault(User);
+            DelegationInstance? delegationInstance = await _userServices.GetDelegationFromClaimOrDefault(User);
             if (delegationInstance == null)
             {
                 TempData["Error"] = "Can't find the specified MUN or delegation";

@@ -29,25 +29,28 @@ namespace MUNAdmin.Controllers
         public async Task<IActionResult> LoginAdmin(AdminLoginModel model)
         {
             if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("AdminPassword", "An unexpected error has occured");
                 return View(model);
+            }
 
             MUNInstance? AdminMUN = await _context.MUNInstance.FirstOrDefaultAsync(x => x.AdminUsername == model.AdminUsername && x.AdminPassword == model.AdminPassword);
 
             if (AdminMUN == null)
             {
-                ModelState.AddModelError("Invalid Login", "The information you inputed does not corraspond to a valid account");
+                ModelState.AddModelError("AdminPassword", "The information you inputed does not corraspond to a valid account");
                 return View(model);
             }
 
-
+            //Create the new claim
             var claims = new List<Claim>
             {
                 new Claim(LoginClaims.MUNID, AdminMUN!.Id.ToString()),
                 new Claim(LoginClaims.Role, LoginClaims.AdminRole)
             };
-
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+            //Assign the new claim
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity)
@@ -68,14 +71,17 @@ namespace MUNAdmin.Controllers
         {
             //If the user did not input all the information required
             if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("DelegationAccsesCode", "An unexpected error has occured");
                 return View(model);
+            }
 
             //Check if the MUN level Access code corasponds to anything
             MUNInstance? userMUN = await _context.MUNInstance.FirstOrDefaultAsync(x => x.MUNAccessCode == model.MUNAccessCode);
 
             if (userMUN == null)
             {
-                ModelState.AddModelError("Invalid Login", "The information you inputed does not corraspond to a valid account");
+                ModelState.AddModelError("MUNAccessCode", "The information you inputed does not corraspond to a valid account");
                 return View(model);
             }
 
@@ -84,7 +90,7 @@ namespace MUNAdmin.Controllers
 
             if (userDelegation == null)
             {
-                ModelState.AddModelError("Invalid Login", "The information you inputed does not corraspond to a valid account");
+                ModelState.AddModelError("DelegationAccsesCode", "The information you inputed does not corraspond to a valid account");
                 return View(model);
             }
 
@@ -95,10 +101,9 @@ namespace MUNAdmin.Controllers
                 new Claim(LoginClaims.DelegationID, userDelegation!.Id.ToString()),
                 new Claim(LoginClaims.Role, LoginClaims.DelegationRole)
             };
-
-            //Give the user the claim cookie
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
+            
+            //Give the user the claim cookie
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity)

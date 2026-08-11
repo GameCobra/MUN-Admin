@@ -16,6 +16,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Login/SelectLoginMethod"; // redirect if not logged in
     });
 
+/*builder.Services.AddAuthorization(option =>
+{
+    
+});*/
+
 builder.Services.AddScoped<UserServices>();
 
 var app = builder.Build();

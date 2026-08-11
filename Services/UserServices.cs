@@ -15,19 +15,29 @@ namespace MUNAdmin.Services
             _context = context;
         }
 
-        public async Task<MUNInstance?> GetClaimMUNInstanceOrDefault(ClaimsPrincipal User)
+        public async Task<MUNInstance?> GetMUNFromClaimOrDefault(ClaimsPrincipal User)
         {
             MUNInstance? munInstance = await _context.MUNInstance.FirstOrDefaultAsync(x => x.Id.ToString() == User.FindFirstValue(LoginClaims.MUNID));
             return munInstance;
         }
 
-        public async Task<DelegationInstance?> GetClaimDelegationInstanceOrDefault(ClaimsPrincipal User)
+        //Returns the a delegation object based 
+        public async Task<DelegationInstance?> GetDelegationFromClaimOrDefault(ClaimsPrincipal User)
         {
-            MUNInstance? munInstance = await GetClaimMUNInstanceOrDefault(User);
+            MUNInstance? munInstance = await GetMUNFromClaimOrDefault(User);
             if (munInstance == null)
                 return null;
             DelegationInstance? delegationInstance = munInstance.DelegationList.FirstOrDefault(x => x.Id.ToString() == User.FindFirstValue(LoginClaims.DelegationID));
             return delegationInstance;
+        }
+
+        public Boolean IsClaimAdmin(ClaimsPrincipal User)
+        {
+            return User.FindFirstValue(LoginClaims.Role) == LoginClaims.AdminRole;
+        }
+        public Boolean IsClaimDelegation(ClaimsPrincipal User)
+        {
+            return User.FindFirstValue(LoginClaims.Role) == LoginClaims.DelegationRole;
         }
 
     }
