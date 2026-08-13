@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MUNAdmin.Data;
 using MUNAdmin.Models;
+using MUNAdmin.Models.LoginModels;
 using MUNAdmin.Services;
 using NuGet.Protocol;
 using System;
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace MUNAdmin.Controllers
@@ -26,6 +28,7 @@ namespace MUNAdmin.Controllers
             _userServices = userServices;
         }
 
+        //[Authorize(Policy = "IsAdminOfMUN")]
         [Authorize]
         public async Task<IActionResult> Index()
         {
@@ -85,6 +88,7 @@ namespace MUNAdmin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,AdminUsername,AdminPassword,MUNTitle,MUNAccessCode")] MUNInstance mUNInstance)
         {
             if (ModelState.IsValid)

@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MUNAdmin.Data;
+using MUNAdmin.Models.LoginModels;
+using MUNAdmin.Policies;
 using MUNAdmin.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MUNAdminContext>(options =>
@@ -16,10 +20,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Login/SelectLoginMethod"; // redirect if not logged in
     });
 
-/*builder.Services.AddAuthorization(option =>
+builder.Services.AddAuthorization(option =>
 {
-    
-});*/
+    option.AddPolicy("IsAdminOfMUN", policy =>
+        policy.Requirements.Add(new IsAdminOfMUN()));
+
+    option.AddPolicy("AdminOnly", policy =>
+        policy.RequireClaim(LoginClaims.Role, LoginClaims.AdminRole));
+
+    option.AddPolicy("DelegateOnly", policy =>
+        policy.RequireClaim(LoginClaims.Role, LoginClaims.DelegationRole));
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, IsAdminOfMUNHandler>();
 
 builder.Services.AddScoped<UserServices>();
 
