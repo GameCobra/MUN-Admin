@@ -1,0 +1,48 @@
+﻿@model MUNAdmin.Models.MUNInstance
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>View Delegation List</h1>
+
+<p>
+    <a asp-action="CreateDelegation">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Country
+            </th>
+            <th>
+                Accses Code
+            </th>
+            <th>
+                Number of Councils
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.DelegationList.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @Model.DelegationList[i].DelegationCountry
+                </td>
+                <td>
+                    @Model.DelegationList[i].DelegationAccsesCode
+                </td>
+                <td>
+                    @Model.DelegationList[i].CouncilList.Count()
+                </td>
+                <td>
+                    <!--<a asp-action="Edit" asp-route-id="@Model.DelegationList[i].Id">Edit</a> | -->
+                    <a asp-action="ViewDelegationDetails" asp-route-id="@Model.DelegationList[i].Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@Model.DelegationList[i].Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

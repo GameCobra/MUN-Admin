@@ -52,7 +52,7 @@ namespace MUNAdmin.Controllers
 
         [HttpGet]
         [Authorize(Policy = "AdminOnly")]
-        public IActionResult Create()
+        public IActionResult CreateDelegation()
         {
             return View();
         }
@@ -60,7 +60,7 @@ namespace MUNAdmin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> Create([Bind("Id,DelegationCountry,DelegationAccsesCode")] DelegationInstance delegationInstanceToCreate)
+        public async Task<IActionResult> CreateDelegation([Bind("Id,DelegationCountry,DelegationAccsesCode")] DelegationInstance delegationInstanceToCreate)
         {
             if (ModelState.IsValid)
             {
