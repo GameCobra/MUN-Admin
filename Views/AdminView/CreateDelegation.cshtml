@@ -1,0 +1,40 @@
+﻿@model MUNAdmin.Models.DelegationInstance;
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>MUNInstance</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateDelegation">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DelegationCountry" class="control-label"></label>
+                <input asp-for="DelegationCountry" class="form-control" />
+                <span asp-validation-for="DelegationCountry" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DelegationAccsesCode" class="control-label"></label>
+                <input asp-for="DelegationAccsesCode" class="form-control" />
+                <span asp-validation-for="DelegationAccsesCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="CreateDelegation" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

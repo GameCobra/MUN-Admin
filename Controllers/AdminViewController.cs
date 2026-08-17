@@ -5,6 +5,8 @@ using MUNAdmin.Data;
 using MUNAdmin.Models;
 using MUNAdmin.Models.LoginModels;
 using MUNAdmin.Services;
+using NuGet.Protocol;
+using System.Diagnostics;
 using System.Security.Claims;
 
 namespace MUNAdmin.Controllers
@@ -62,15 +64,24 @@ namespace MUNAdmin.Controllers
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> CreateDelegation([Bind("Id,DelegationCountry,DelegationAccsesCode")] DelegationInstance delegationInstanceToCreate)
         {
+            //delegationInstanceToCreate.CouncilList = new List<DelegationCouncil>();
             if (ModelState.IsValid)
             {
                 MUNInstance ownedMUNInstance = await _userServices.GetMUNFromClaimOrDefault(User)!;
                 ownedMUNInstance.DelegationList.Add(delegationInstanceToCreate);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ViewDelegations));
             }
             //ModelState.AddModelError() -- Add error at somepoint
+            Debug.WriteLine(ModelState.ToJson());
             return View(delegationInstanceToCreate);
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
+        public IActionResult ViewCouncilList()
+        {
+            return View();
         }
     }
 }

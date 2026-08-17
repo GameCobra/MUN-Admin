@@ -19,16 +19,29 @@ namespace MUNAdmin.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MUNInstance>()
-                .OwnsMany(m => m.CouncilInformationList);
+                .HasMany(m => m.CouncilInformationList)
+                .WithOne()
+                .HasForeignKey(c => c.MUNInstanceId);
+            
+            modelBuilder.Entity<CouncilInformation>()
+                        .OwnsMany(n => n.Resolutions, resolution =>
+                        {
+                            resolution.HasKey(o => o.Id);
+                        });
 
             modelBuilder.Entity<MUNInstance>()
                 .OwnsMany(m => m.DelegationList, delegation =>
                 {
                     delegation.HasKey(d => d.Id);
 
-                    delegation.OwnsMany(d => d.CouncilList, council =>
+                    delegation.OwnsMany(d => d.CouncilList, delegationCouncil =>
                     {
-                        council.OwnsOne(c => c.Council);
+                        delegationCouncil.HasOne(c => c.Council)
+                                         .WithMany()
+                                         .HasForeignKey(e => e.CouncilId)
+                                         .OnDelete(DeleteBehavior.NoAction);
+
+                        delegationCouncil.OwnsMany(e => e.Ammendments);
                     });
                 });
         }

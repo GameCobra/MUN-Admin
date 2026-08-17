@@ -21,6 +21,36 @@ namespace MUNAdmin.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MUNAdmin.Models.CouncilInformation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CouncilName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MUNInstanceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PrimaryColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecondaryColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MUNInstanceId");
+
+                    b.ToTable("CouncilInformation");
+                });
+
             modelBuilder.Entity("MUNAdmin.Models.MUNInstance", b =>
                 {
                     b.Property<int>("Id")
@@ -47,6 +77,50 @@ namespace MUNAdmin.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("MUNInstance");
+                });
+
+            modelBuilder.Entity("MUNAdmin.Models.CouncilInformation", b =>
+                {
+                    b.HasOne("MUNAdmin.Models.MUNInstance", null)
+                        .WithMany("CouncilInformationList")
+                        .HasForeignKey("MUNInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.OwnsMany("MUNAdmin.Models.Resolution", "Resolutions", b1 =>
+                        {
+                            b1.Property<int>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int");
+
+                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+
+                            b1.Property<string>("BodyText")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Code")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("CouncilInformationId")
+                                .HasColumnType("int");
+
+                            b1.Property<string>("Title")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("CouncilInformationId");
+
+                            b1.ToTable("Resolution");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CouncilInformationId");
+                        });
+
+                    b.Navigation("Resolutions");
                 });
 
             modelBuilder.Entity("MUNAdmin.Models.MUNInstance", b =>
@@ -92,6 +166,9 @@ namespace MUNAdmin.Migrations
                                     b2.Property<int>("AmendmentPoints")
                                         .HasColumnType("int");
 
+                                    b2.Property<int>("CouncilId")
+                                        .HasColumnType("int");
+
                                     b2.Property<int>("RebuttalPoints")
                                         .HasColumnType("int");
 
@@ -100,12 +177,20 @@ namespace MUNAdmin.Migrations
 
                                     b2.HasKey("DelegationInstanceId", "Id");
 
+                                    b2.HasIndex("CouncilId");
+
                                     b2.ToTable("DelegationCouncil");
+
+                                    b2.HasOne("MUNAdmin.Models.CouncilInformation", "Council")
+                                        .WithMany()
+                                        .HasForeignKey("CouncilId")
+                                        .OnDelete(DeleteBehavior.NoAction)
+                                        .IsRequired();
 
                                     b2.WithOwner()
                                         .HasForeignKey("DelegationInstanceId");
 
-                                    b2.OwnsOne("MUNAdmin.Models.CouncilInformation", "Council", b3 =>
+                                    b2.OwnsMany("MUNAdmin.Models.Ammendment", "Ammendments", b3 =>
                                         {
                                             b3.Property<int>("DelegationCouncilDelegationInstanceId")
                                                 .HasColumnType("int");
@@ -113,67 +198,44 @@ namespace MUNAdmin.Migrations
                                             b3.Property<int>("DelegationCouncilId")
                                                 .HasColumnType("int");
 
-                                            b3.Property<string>("CouncilName")
+                                            b3.Property<int>("Id")
+                                                .ValueGeneratedOnAdd()
+                                                .HasColumnType("int");
+
+                                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b3.Property<int>("Id"));
+
+                                            b3.Property<string>("ChangeClauseNumber")
+                                                .HasColumnType("nvarchar(max)");
+
+                                            b3.Property<string>("NewText")
                                                 .IsRequired()
                                                 .HasColumnType("nvarchar(max)");
 
-                                            b3.Property<string>("PrimaryColor")
-                                                .IsRequired()
-                                                .HasColumnType("nvarchar(max)");
+                                            b3.Property<int>("ResolutionID")
+                                                .HasColumnType("int");
 
-                                            b3.Property<string>("SecondaryColor")
-                                                .IsRequired()
-                                                .HasColumnType("nvarchar(max)");
+                                            b3.HasKey("DelegationCouncilDelegationInstanceId", "DelegationCouncilId", "Id");
 
-                                            b3.HasKey("DelegationCouncilDelegationInstanceId", "DelegationCouncilId");
-
-                                            b3.ToTable("DelegationCouncil");
+                                            b3.ToTable("Ammendment");
 
                                             b3.WithOwner()
                                                 .HasForeignKey("DelegationCouncilDelegationInstanceId", "DelegationCouncilId");
                                         });
 
-                                    b2.Navigation("Council")
-                                        .IsRequired();
+                                    b2.Navigation("Ammendments");
+
+                                    b2.Navigation("Council");
                                 });
 
                             b1.Navigation("CouncilList");
                         });
 
-                    b.OwnsMany("MUNAdmin.Models.CouncilInformation", "CouncilInformationList", b1 =>
-                        {
-                            b1.Property<int>("MUNInstanceId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
-
-                            b1.Property<string>("CouncilName")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("PrimaryColor")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("SecondaryColor")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("MUNInstanceId", "Id");
-
-                            b1.ToTable("MUNInstance_CouncilInformationList");
-
-                            b1.WithOwner()
-                                .HasForeignKey("MUNInstanceId");
-                        });
-
-                    b.Navigation("CouncilInformationList");
-
                     b.Navigation("DelegationList");
+                });
+
+            modelBuilder.Entity("MUNAdmin.Models.MUNInstance", b =>
+                {
+                    b.Navigation("CouncilInformationList");
                 });
 #pragma warning restore 612, 618
         }
