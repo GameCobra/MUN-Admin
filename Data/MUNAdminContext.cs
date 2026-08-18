@@ -42,6 +42,10 @@ namespace MUNAdmin.Data
                                          .OnDelete(DeleteBehavior.NoAction);
 
                         delegationCouncil.OwnsMany(e => e.Ammendments);
+
+                        delegationCouncil.Navigation(c => c.Council)
+                                         .AutoInclude();
+
                     });
                 });
         }

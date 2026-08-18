@@ -27,17 +27,11 @@ namespace MUNAdmin.Controllers
         }
 
         [HttpPost]
-        [Authorize]
-        public async  Task<IActionResult> UserRequestRebutal(string desiredStateStr, string councilName)
+        [Authorize(Policy = "DelegateOnly")]
+        public async  Task<IActionResult> UserRequestRebutal(string desiredStateStr, string councilId)
         {
             bool desiredState = desiredStateStr == "value" ? true : false;
-            Debug.WriteLine(desiredState);
-            //Remove the user if they are a admin account
-            if (User.FindFirstValue(LoginClaims.AdminRole) == LoginClaims.AdminRole)
-            {
-                TempData["Error"] = "You are an Admin account, you can not request speaker points";
-                return RedirectToAction(nameof(Index));
-            }
+            //Debug.WriteLine(desiredState);
 
             //Gets their delegation instance if possible
             DelegationInstance? delegationInstance = await _userServices.GetDelegationFromClaimOrDefault(User);
@@ -47,10 +41,10 @@ namespace MUNAdmin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            DelegationCouncil? delegationCouncil = delegationInstance.CouncilList.FirstOrDefault(x => x.Council.CouncilName == councilName);
+            DelegationCouncil? delegationCouncil = delegationInstance.CouncilList.FirstOrDefault(x => x.Council.Id.ToString() == councilId);
             if (delegationCouncil == null)
             {
-                TempData["Error"] = "Not a member of the specified council: " + councilName;
+                TempData["Error"] = "Not a member of the specified council Id: " + councilId;
                 return RedirectToAction(nameof(Index));
             }
 

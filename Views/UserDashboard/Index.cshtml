@@ -2,8 +2,10 @@
 @{
     string currentMUNTitle = "Test MUN";
     string currentCouncilName = "Security";
+    //Console.WriteLine(Model.CouncilList[0].);
     DelegationCouncil currentDelegationCouncil = Model.CouncilList.First(x => x.Council.CouncilName == currentCouncilName);
     CouncilInformation currentCouncilInformation = currentDelegationCouncil.Council;
+    List<Resolution> resolutions = currentDelegationCouncil.Council.Resolutions;
 }
 <head>
     <meta charset="UTF-8">
@@ -78,7 +80,7 @@
                             <form asp-action="UserRequestRebutal">
                                 <div class="text-danger"></div>
                                 <input type="hidden" name="desiredStateStr" value="@(!currentDelegationCouncil.RequestedRebuttal)" />
-                                <input type="hidden" name="councilName" value="@currentCouncilName" />
+                                <input type="hidden" name="councilId" value="@currentCouncilInformation.Id" />
 
                                 <div class="form-group">
                                     <input type="submit" value="Request Point" class="card-button Request-Rebuttal-card-button">
@@ -89,13 +91,16 @@
                     </div>
 
                     <div class="row g-4">
-                        <div class="col-md-4">
-                            <div class="card-button">Button 2</div>
-                        </div>
+                        @for (int i = 0; i < currentCouncilInformation.Resolutions.Count(); i++)
+                        {
+                            Resolution currentResolution = currentCouncilInformation.Resolutions[i];
 
-                        <div class="col-md-4">
-                            <div class="card-button">Button 3</div>
-                        </div>
+                            <div class="col-md-4">
+                                <div class="card-button">
+                                    @(currentResolution.Code + " - " + currentResolution.Title)
+                                </div>
+                            </div>
+                        }
                     </div>
 
                 </div>

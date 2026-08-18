@@ -39,7 +39,14 @@ namespace MUNAdmin.Controllers
                 {
                     CouncilName = "Security",
                     PrimaryColor = "4d92b3",
-                    SecondaryColor = "bdeaff"
+                    SecondaryColor = "bdeaff",
+                    Resolutions = new List<Resolution>
+                    {
+                        new Resolution {Title = "T1", BodyText = "B1", Code = "C1"},
+                        new Resolution {Title = "T2", BodyText = "B2", Code = "C2"},
+                        new Resolution {Title = "T3", BodyText = "B3", Code = "C3"},
+                        new Resolution {Title = "T4", BodyText = "B4", Code = "C4"}
+                    }
                 };
 
                 _context.MUNInstance.Add(new MUNInstance
