@@ -18,6 +18,10 @@
             background:#f5f5f5;
         }
 
+        button {
+            all: unset;
+        }
+
         .main-panel,
         .side-panel{
             background: #@currentCouncilInformation.SecondaryColor;
@@ -90,14 +94,36 @@
                         </div>
                     </div>
 
+                    <!-- Resolution Buttons -->
                     <div class="row g-4">
                         @for (int i = 0; i < currentCouncilInformation.Resolutions.Count(); i++)
                         {
+                            <!-- Single Resolution Button -->
                             Resolution currentResolution = currentCouncilInformation.Resolutions[i];
 
                             <div class="col-md-4">
-                                <div class="card-button">
+                                <div class="card-button" type="button" data-bs-toggle="modal" data-bs-target="@("#ResolutionPopup" + currentResolution.Id)">
+                                    <!-- Resolution button content -->
                                     @(currentResolution.Code + " - " + currentResolution.Title)
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="@("ResolutionPopup" + currentResolution.Id)" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-5">Modal title</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ...
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         }
@@ -122,7 +148,5 @@
             </div>
 
         </div>
-
     </div>
-
 </body>
