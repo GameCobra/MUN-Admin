@@ -1,152 +1,614 @@
 ﻿@model MUNAdmin.Models.DelegationInstance
+
 @{
     string currentMUNTitle = "Test MUN";
     string currentCouncilName = "Security";
-    //Console.WriteLine(Model.CouncilList[0].);
-    DelegationCouncil currentDelegationCouncil = Model.CouncilList.First(x => x.Council.CouncilName == currentCouncilName);
+
+    DelegationCouncil currentDelegationCouncil =
+        Model.CouncilList.First(x => x.Council.CouncilName == currentCouncilName);
+
     CouncilInformation currentCouncilInformation = currentDelegationCouncil.Council;
     List<Resolution> resolutions = currentDelegationCouncil.Council.Resolutions;
 }
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .council-bar {
+        background: linear-gradient(100deg, #2563eb, #1e40af);
+        color: white;
+        border-radius: 12px;
+    }
 
-    <style>
-        body{
-            background:#f5f5f5;
-        }
+    .council-tab {
+        border: none;
+        background: transparent;
+        color: #64748b;
+        padding: 7px 14px;
+        border-radius: 8px;
+        font-size: .8rem;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: .15s;
+    }
 
-        button {
-            all: unset;
-        }
+    .council-tab:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
 
-        .main-panel,
-        .side-panel{
-            background: #@currentCouncilInformation.SecondaryColor;
-            border-radius:20px;
-            padding:25px;
-            min-height:500px;
-            box-shadow:0 0 10px rgba(0,0,0,.1);
-        }
+    .council-tab.active {
+        background: #2563eb;
+        color: white;
+    }
 
-        .menu-item{
-            padding:12px;
-            border-radius:10px;
-            margin-bottom:10px;
-            cursor:pointer;
-        }
+</style>
 
-        .menu-item:hover{
-                background: #00000010;
-        }
+<div class="container-fluid py-4">
 
-        .card-button{
-            height:140px;
-            border:2px solid;
-            border-color: #@currentCouncilInformation.PrimaryColor;
-            border-radius:15px;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            font-size:1.2rem;
-            transition:.2s;
-            cursor:pointer;
-            background: #@currentCouncilInformation.SecondaryColor;
-        }
+    <!-- Header -->
+    <div class="card border rounded-3 mb-3">
+        <div class="card-body py-3 px-4">
+            <div class="d-flex justify-content-between align-items-center">
 
-        .card-button:hover{
-            background: #00000010;
-        }
+                <div class="d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-primary-subtle text-primary d-flex
+                                align-items-center justify-content-center fw-bold"
+                         style="width: 36px; height: 36px;">
+                        CA
+                    </div>
 
-        .Request-Rebuttal-card-button{
-            height: 50px;
-            border: 4px solid;
-            border-color: #@(currentDelegationCouncil.RequestedRebuttal ? "26f007" : "d11d1d");
-        }
-    </style>
-</head>
-<body>
-    <h2 class="mb-4">@currentMUNTitle</h2>
-    <div class="container py-5">
+                    <div>
+                        <h1 class="h5 fw-bold mb-0">Test MUN</h1>
+                        <div class="small text-secondary">Delegate Dashboard</div>
+                    </div>
+                </div>
 
-        <div class="row g-4">
-            <!-- Left Panel -->
-            <div class="col-lg-8">
-                <div class="main-panel">
+                <div class="text-end d-none d-sm-block">
+                    <div class="fw-semibold small">Canada</div>
+                    <div class="small text-secondary">Delegate</div>
+                </div>
 
-                    <h2 class="mb-4">@currentCouncilInformation.CouncilName</h2>
+            </div>
+        </div>
+    </div>
 
-                    <div class="row g-4 py-4">
+    <!-- Council Selector -->
+    <div class="card border rounded-3 mb-3">
+        <div class="card-body p-2">
+            <div class="d-flex gap-2 overflow-auto">
 
-                        <div class="col-md-3">
-                            <form asp-action="UserRequestRebutal">
-                                <div class="text-danger"></div>
-                                <input type="hidden" name="desiredStateStr" value="@(!currentDelegationCouncil.RequestedRebuttal)" />
-                                <input type="hidden" name="councilId" value="@currentCouncilInformation.Id" />
+                <button type="button"
+                        class="flex-shrink-0 council-tab active">
+                    Security Council
+                </button>
 
-                                <div class="form-group">
-                                    <input type="submit" value="Request Point" class="card-button Request-Rebuttal-card-button">
-                                </div>
-                                
-                            </form>
+                <button type="button"
+                        class="flex-shrink-0 council-tab">
+                    General Assembly
+                </button>
+
+                <button type="button"
+                        class="flex-shrink-0 council-tab">
+                    Human Rights Council
+                </button>
+
+                <button type="button"
+                        class="flex-shrink-0 council-tab">
+                    Economic Council
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Council -->
+    <div class="card bg-primary text-white border-0 rounded-3 mb-3">
+        <div class="card-body py-3 px-4 council-bar">
+            <div class="row align-items-center">
+
+                <div class="col">
+                    <span class="badge bg-light bg-opacity-10 text-white rounded-pill mb-1">
+                        <span class="d-inline-block bg-success rounded-circle me-1"
+                              style="width: 7px; height: 7px;"></span>
+                        Session in progress
+                    </span>
+
+                    <h2 class="h5 fw-bold mb-0">Security Council</h2>
+                    <div class="small opacity-75">Current council</div>
+                </div>
+
+                <div class="col-auto text-end">
+                    <div class="small text-uppercase opacity-75">Representing</div>
+                    <div class="fw-bold">Canada</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Area -->
+    <div class="row g-3">
+
+        <!-- Resolutions -->
+        <div class="col-lg-8">
+
+            <div class="card border rounded-3 h-100">
+
+                <div class="card-header bg-white py-3 px-3">
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <div class="fw-bold">Resolutions</div>
+                            <div class="small text-secondary">
+                                Click a resolution to view or propose amendments
+                            </div>
                         </div>
+
+                        <span class="small text-secondary">6 total</span>
+
                     </div>
+                </div>
 
-                    <!-- Resolution Buttons -->
-                    <div class="row g-4">
-                        @for (int i = 0; i < currentCouncilInformation.Resolutions.Count(); i++)
-                        {
-                            <!-- Single Resolution Button -->
-                            Resolution currentResolution = currentCouncilInformation.Resolutions[i];
+                <div class="card-body p-3">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
 
-                            <div class="col-md-4">
-                                <div class="card-button" type="button" data-bs-toggle="modal" data-bs-target="@("#ResolutionPopup" + currentResolution.Id)">
-                                    <!-- Resolution button content -->
-                                    @(currentResolution.Code + " - " + currentResolution.Title)
-                                </div>
-                            </div>
+                        <!-- Resolution 1 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ResolutionPopup1">
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="@("ResolutionPopup" + currentResolution.Id)" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h1 class="modal-title fs-5">Modal title</h1>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            ...
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
-                                        </div>
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C1
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T1</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
                                     </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">2 amendments</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
                                 </div>
-                            </div>
-                        }
+                            </button>
+                        </div>
+
+                        <!-- Resolution 2 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ResolutionPopup2">
+
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C2
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T2</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">No amendments</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Resolution 3 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ResolutionPopup3">
+
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C3
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T3</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">1 amendment</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Resolution 4 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#ResolutionPopup4">
+
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C4
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T4</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">3 amendments</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Resolution 5 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3">
+
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C5
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T5</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">1 amendment</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Resolution 6 -->
+                        <div class="col">
+                            <button type="button"
+                                    class="card h-100 w-100 text-start border rounded-3 bg-white p-3">
+
+                                <div class="d-flex flex-column h-100">
+
+                                    <span class="badge text-primary bg-primary-subtle align-self-start">
+                                        C6
+                                    </span>
+
+                                    <div class="fw-bold mt-2">T6</div>
+
+                                    <div class="small text-secondary mt-1">
+                                        Resolution regarding the current topic
+                                        under discussion.
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center
+                                                border-top mt-auto pt-2">
+                                        <span class="small text-secondary">0 amendments</span>
+                                        <span class="small fw-bold text-primary">View →</span>
+                                    </div>
+
+                                </div>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+
+            <div class="card border rounded-3">
+
+                <!-- Quick Actions -->
+                <div class="card-body p-3">
+
+                    <div class="small fw-bold text-uppercase text-secondary mb-2">
+                        Quick Actions
                     </div>
 
+                    <button type="button"
+                            class="btn btn-danger bg-danger-subtle text-danger border-0
+                                   w-100 text-start mb-2 p-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#RebuttalModal">
+
+                        <span class="fw-bold d-block">Request Rebuttal</span>
+                        <span class="small">Request speaking time</span>
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-light border w-100 text-start mb-2 p-2">
+                        <span class="badge text-primary bg-primary-subtle me-2">?</span>
+                        <span>
+                            <span class="fw-semibold d-block small">Council Information</span>
+                            <span class="text-secondary" style="font-size: .75rem;">
+                                View council details
+                            </span>
+                        </span>
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-light border w-100 text-start p-2">
+                        <span class="badge text-primary bg-primary-subtle me-2">#</span>
+                        <span>
+                            <span class="fw-semibold d-block small">My Delegation</span>
+                            <span class="text-secondary" style="font-size: .75rem;">
+                                View delegation details
+                            </span>
+                        </span>
+                    </button>
+
                 </div>
+
+                <div class="border-top"></div>
+
+                <!-- Session -->
+                <div class="card-body p-3">
+
+                    <div class="small fw-bold text-uppercase text-secondary mb-2">
+                        Session
+                    </div>
+
+                    <div class="row g-2">
+
+                        <div class="col-6">
+                            <div class="bg-body-tertiary rounded-2 p-2">
+                                <div class="small text-secondary">STATUS</div>
+                                <div class="fw-bold text-success small">Active</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="bg-body-tertiary rounded-2 p-2">
+                                <div class="small text-secondary">RESOLUTIONS</div>
+                                <div class="fw-bold small">6</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="bg-body-tertiary rounded-2 p-2">
+                                <div class="small text-secondary">AMENDMENTS</div>
+                                <div class="fw-bold small">7</div>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="bg-body-tertiary rounded-2 p-2">
+                                <div class="small text-secondary">COUNTRY</div>
+                                <div class="fw-bold small">Canada</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Resolution Modal -->
+<div class="modal fade"
+     id="ResolutionPopup1"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <div>
+                    <div class="small fw-bold text-primary">C1</div>
+                    <h5 class="modal-title">T1</h5>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
             </div>
 
-            <!-- Right Panel -->
-            <div class="col-lg-4">
-                <div class="side-panel">
+            <div class="modal-body">
 
-                    <h4>Navigation</h4>
+                <div class="bg-body-tertiary border rounded-3 p-3 mb-3">
+                    This is where the complete resolution text would be displayed.
+                </div>
 
-                    <div class="menu-item">1</div>
-                    <div class="menu-item">2</div>
-                    <div class="menu-item">3</div>
-                    <div class="menu-item">4</div>
-                    <div class="menu-item">5</div>
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <strong>Amendments</strong>
+                        <div class="small text-secondary">2 amendments submitted</div>
+                    </div>
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#AmendmentModal">
+                        + Add Amendment
+                    </button>
 
                 </div>
+
             </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Amendment Modal -->
+<div class="modal fade"
+     id="AmendmentModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <div>
+                    <div class="small fw-bold text-primary">C1 - T1</div>
+                    <h5 class="modal-title">Create Amendment</h5>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <form method="post"
+                  action="/UserDashboard/CreateAmendment">
+
+                <div class="modal-body">
+
+                    <input type="hidden"
+                           name="resolutionId"
+                           value="1">
+
+                    <label class="form-label fw-semibold">
+                        Amendment
+                    </label>
+
+                    <textarea class="form-control"
+                              name="amendmentText"
+                              rows="5"
+                              placeholder="Enter your proposed amendment..."></textarea>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        Submit Amendment
+                    </button>
+
+                </div>
+            </form>
 
         </div>
     </div>
-</body>
+</div>
+
+
+<!-- Rebuttal Modal -->
+<div class="modal fade"
+     id="RebuttalModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Request Rebuttal
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+            <form method="post"
+                  action="/UserDashboard/UserRequestRebutal">
+
+                <div class="modal-body">
+
+                    <input type="hidden"
+                           name="councilId"
+                           value="2">
+
+                    <input type="hidden"
+                           name="desiredStateStr"
+                           value="value">
+
+                    <p class="text-secondary small">
+                        Request speaking time to respond to another
+                        delegate during the current session.
+                    </p>
+
+                    <textarea class="form-control"
+                              name="reason"
+                              rows="3"
+                              placeholder="Reason (optional)"></textarea>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Request Rebuttal
+                    </button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
