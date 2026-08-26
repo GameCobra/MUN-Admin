@@ -5,7 +5,7 @@
 namespace MUNAdmin.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -44,8 +44,7 @@ namespace MUNAdmin.Migrations
                         name: "FK_CouncilInformation_MUNInstance_MUNInstanceId",
                         column: x => x.MUNInstanceId,
                         principalTable: "MUNInstance",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(

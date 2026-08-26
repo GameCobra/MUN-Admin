@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MUNAdmin.Migrations
 {
     [DbContext(typeof(MUNAdminContext))]
-    [Migration("20260817060341_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20260826050846_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,7 +87,7 @@ namespace MUNAdmin.Migrations
                     b.HasOne("MUNAdmin.Models.MUNInstance", null)
                         .WithMany("CouncilInformationList")
                         .HasForeignKey("MUNInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.OwnsMany("MUNAdmin.Models.Resolution", "Resolutions", b1 =>

@@ -21,7 +21,9 @@ namespace MUNAdmin.Data
             modelBuilder.Entity<MUNInstance>()
                 .HasMany(m => m.CouncilInformationList)
                 .WithOne()
-                .HasForeignKey(c => c.MUNInstanceId);
+                .HasForeignKey(c => c.MUNInstanceId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             
             modelBuilder.Entity<CouncilInformation>()
                         .OwnsMany(n => n.Resolutions, resolution =>

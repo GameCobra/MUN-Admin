@@ -54,10 +54,12 @@ namespace MUNAdmin.Controllers
                     AdminUsername = "ADMIN",
                     AdminPassword = "ADMINPASSWORD",
                     MUNTitle = "TEST MUN",
+                    MUNAccessCode = 1,
                     CouncilInformationList = new List<CouncilInformation> { council },
                     DelegationList = new List<DelegationInstance> { new DelegationInstance
                     {
                         DelegationCountry = "Canada",
+                        DelegationAccsesCode = 1,
                         CouncilList = new List<DelegationCouncil> { new DelegationCouncil
                         {
                             Council = council,
@@ -184,6 +186,19 @@ namespace MUNAdmin.Controllers
             var mUNInstance = await _context.MUNInstance.FindAsync(id);
             if (mUNInstance != null)
             {
+                for (int i = 0; i < mUNInstance.DelegationList.Count; i++)
+                {
+                    for (int j = 0; j < mUNInstance.DelegationList[i].CouncilList.Count; j++)
+                    {
+                        _context.Remove(mUNInstance.DelegationList[i].CouncilList[j]);
+                    }
+                }
+
+                for (int i = 0; i < mUNInstance.CouncilInformationList.Count; i++)
+                {
+                    _context.Remove(mUNInstance.CouncilInformationList[i]);
+                }
+
                 _context.MUNInstance.Remove(mUNInstance);
             }
 

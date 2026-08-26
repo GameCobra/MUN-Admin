@@ -23,6 +23,7 @@ namespace MUNAdmin.Controllers
 
         public IActionResult Index()
         {
+            //ViewData[""]
             return View(_context.MUNInstance.First(x => x.AdminUsername == "ADMIN").DelegationList.First(x => x.DelegationCountry == "Canada") );
         }
 

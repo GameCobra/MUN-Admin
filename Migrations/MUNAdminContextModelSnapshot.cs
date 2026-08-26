@@ -84,7 +84,7 @@ namespace MUNAdmin.Migrations
                     b.HasOne("MUNAdmin.Models.MUNInstance", null)
                         .WithMany("CouncilInformationList")
                         .HasForeignKey("MUNInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.OwnsMany("MUNAdmin.Models.Resolution", "Resolutions", b1 =>
