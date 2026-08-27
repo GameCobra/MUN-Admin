@@ -29,7 +29,7 @@ namespace MUNAdmin.Controllers
         }
 
         //[Authorize(Policy = "IsAdminOfMUN")]
-        [Authorize]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Index()
         {
 
@@ -49,23 +49,37 @@ namespace MUNAdmin.Controllers
                     }
                 };
 
+                CouncilInformation council2 = new CouncilInformation
+                {
+                    CouncilName = "ECO",
+                    PrimaryColor = "",
+                    SecondaryColor = "",
+                    Resolutions = new List<Resolution>
+                    {
+                        new Resolution {Title = "T11", BodyText = "New Resolution", Code = "C"},
+                    }
+                };
+
                 _context.MUNInstance.Add(new MUNInstance
                 {
                     AdminUsername = "ADMIN",
                     AdminPassword = "ADMINPASSWORD",
                     MUNTitle = "TEST MUN",
                     MUNAccessCode = 1,
-                    CouncilInformationList = new List<CouncilInformation> { council },
-                    DelegationList = new List<DelegationInstance> { new DelegationInstance
-                    {
-                        DelegationCountry = "Canada",
-                        DelegationAccsesCode = 1,
-                        CouncilList = new List<DelegationCouncil> { new DelegationCouncil
+                    CouncilInformationList = new List<CouncilInformation> { council, council2 },
+                    DelegationList = new List<DelegationInstance> 
+                    { 
+                        new DelegationInstance
                         {
-                            Council = council,
-                            RequestedRebuttal = false
-                        } }
-                    } }
+                            DelegationCountry = "Canada",
+                            DelegationAccsesCode = 1,
+                            CouncilList = new List<DelegationCouncil> 
+                            { 
+                                new DelegationCouncil { Council = council, RequestedRebuttal = false},
+                                new DelegationCouncil { Council = council2, RequestedRebuttal = false}
+                            }
+                        } 
+                    }
                 });
                 await _context.SaveChangesAsync();
             }
@@ -76,14 +90,17 @@ namespace MUNAdmin.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified ID";
+                return RedirectToAction("Error", "Home");
+
             }
 
             var mUNInstance = await _context.MUNInstance
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (mUNInstance == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified MUN";
+                return RedirectToAction("Error", "Home");
             }
 
             return View(mUNInstance);
@@ -114,13 +131,15 @@ namespace MUNAdmin.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified ID";
+                return RedirectToAction("Error", "Home");
             }
 
             var mUNInstance = await _context.MUNInstance.FindAsync(id);
             if (mUNInstance == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified MUN";
+                return RedirectToAction("Error", "Home");
             }
             return View(mUNInstance);
         }
@@ -134,7 +153,8 @@ namespace MUNAdmin.Controllers
         {
             if (id != mUNInstance.Id)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified ID";
+                return RedirectToAction("Error", "Home");
             }
 
             if (ModelState.IsValid)
@@ -148,7 +168,8 @@ namespace MUNAdmin.Controllers
                 {
                     if (!MUNInstanceExists(mUNInstance.Id))
                     {
-                        return NotFound();
+                        TempData["Error"] = "Could not find the specified MUN";
+                        return RedirectToAction("Error", "Home");
                     }
                     else
                     {
@@ -165,14 +186,16 @@ namespace MUNAdmin.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified ID";
+                return RedirectToAction("Error", "Home");
             }
 
             var mUNInstance = await _context.MUNInstance
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (mUNInstance == null)
             {
-                return NotFound();
+                TempData["Error"] = "Could not find the specified MUN";
+                return RedirectToAction("Error", "Home");
             }
 
             return View(mUNInstance);

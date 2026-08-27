@@ -1,14 +1,11 @@
-﻿@model MUNAdmin.Models.DelegationInstance
+﻿@model MUNAdmin.Models.DelegationCouncil
 
 @{
-    string currentMUNTitle = "Test MUN";
-    string currentCouncilName = "Security";
-
-    DelegationCouncil currentDelegationCouncil =
-        Model.CouncilList.First(x => x.Council.CouncilName == currentCouncilName);
-
-    CouncilInformation currentCouncilInformation = currentDelegationCouncil.Council;
-    List<Resolution> resolutions = currentDelegationCouncil.Council.Resolutions;
+    string currentCouncil = (string)ViewData["CurrentCouncil"]!;
+    List<string> participatingCouncils = (List<string>)ViewData["ParticipatingCouncils"]!;
+    CouncilInformation currentCouncilInformation = (CouncilInformation)ViewData["CurrentCouncilInformation"]!;
+    string MUNTitle = (string)ViewData["MUNTitle"]!;
+    DelegationInstance currentDelegation = (DelegationInstance)ViewData["DelegationInstance"]!;
 }
 
 <style>
@@ -58,13 +55,13 @@
                     </div>
 
                     <div>
-                        <h1 class="h5 fw-bold mb-0">Test MUN</h1>
+                        <h1 class="h5 fw-bold mb-0">@(MUNTitle)</h1>
                         <div class="small text-secondary">Delegate Dashboard</div>
                     </div>
                 </div>
 
                 <div class="text-end d-none d-sm-block">
-                    <div class="fw-semibold small">Canada</div>
+                    <div class="fw-semibold small">@(currentDelegation.DelegationCountry)</div>
                     <div class="small text-secondary">Delegate</div>
                 </div>
 
@@ -77,26 +74,23 @@
         <div class="card-body p-2">
             <div class="d-flex gap-2 overflow-auto">
 
-                <button type="button"
+                @for (int i = 0; i < participatingCouncils.Count; i++)
+                {
+                    if (participatingCouncils[i] == currentCouncil)
+                    {
+                        <button type="button"
                         class="flex-shrink-0 council-tab active">
-                    Security Council
-                </button>
-
-                <button type="button"
-                        class="flex-shrink-0 council-tab">
-                    General Assembly
-                </button>
-
-                <button type="button"
-                        class="flex-shrink-0 council-tab">
-                    Human Rights Council
-                </button>
-
-                <button type="button"
-                        class="flex-shrink-0 council-tab">
-                    Economic Council
-                </button>
-
+                            @(participatingCouncils[i])
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="flex-shrink-0 council-tab">
+                            @(participatingCouncils[i])
+                        </button>
+                    }
+                }
             </div>
         </div>
     </div>
