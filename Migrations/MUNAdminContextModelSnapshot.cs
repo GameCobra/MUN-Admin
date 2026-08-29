@@ -29,20 +29,29 @@ namespace MUNAdmin.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("AcceptingAmmendments")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AcceptingRebuttals")
+                        .HasColumnType("bit");
+
                     b.Property<string>("CouncilName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GradientPrimaryColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GradientSecondaryColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsInSession")
+                        .HasColumnType("bit");
+
                     b.Property<int>("MUNInstanceId")
                         .HasColumnType("int");
-
-                    b.Property<string>("PrimaryColor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SecondaryColor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

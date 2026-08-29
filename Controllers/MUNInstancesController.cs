@@ -28,18 +28,15 @@ namespace MUNAdmin.Controllers
             _userServices = userServices;
         }
 
-        //[Authorize(Policy = "IsAdminOfMUN")]
-        [Authorize(Policy = "AdminOnly")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> RepairDatabase()
         {
-
             if (!_context.MUNInstance.Any())
             {
                 CouncilInformation council = new CouncilInformation
                 {
                     CouncilName = "Security",
-                    PrimaryColor = "4d92b3",
-                    SecondaryColor = "bdeaff",
+                    GradientPrimaryColor = "2563eb",
+                    GradientSecondaryColor = "1e40af",
                     Resolutions = new List<Resolution>
                     {
                         new Resolution {Title = "T1", BodyText = "B1", Code = "C1"},
@@ -52,8 +49,8 @@ namespace MUNAdmin.Controllers
                 CouncilInformation council2 = new CouncilInformation
                 {
                     CouncilName = "ECO",
-                    PrimaryColor = "",
-                    SecondaryColor = "",
+                    GradientPrimaryColor = "123456",
+                    GradientSecondaryColor = "abcdef",
                     Resolutions = new List<Resolution>
                     {
                         new Resolution {Title = "T11", BodyText = "New Resolution", Code = "C"},
@@ -67,22 +64,43 @@ namespace MUNAdmin.Controllers
                     MUNTitle = "TEST MUN",
                     MUNAccessCode = 1,
                     CouncilInformationList = new List<CouncilInformation> { council, council2 },
-                    DelegationList = new List<DelegationInstance> 
-                    { 
+                    DelegationList = new List<DelegationInstance>
+                    {
                         new DelegationInstance
                         {
                             DelegationCountry = "Canada",
                             DelegationAccsesCode = 1,
-                            CouncilList = new List<DelegationCouncil> 
-                            { 
+                            CouncilList = new List<DelegationCouncil>
+                            {
                                 new DelegationCouncil { Council = council, RequestedRebuttal = false},
                                 new DelegationCouncil { Council = council2, RequestedRebuttal = false}
                             }
-                        } 
+                        }
                     }
                 });
+
+                await _context.SaveChangesAsync();
+
+
+                _context.MUNInstance
+                    .First(x => x.MUNAccessCode == 1).DelegationList
+                    .First(x => x.DelegationAccsesCode == 1).CouncilList
+                    .First(x => x.Council.CouncilName == "Security")
+                    .Ammendments.Add(new Ammendment 
+                        { ResolutionID = _context.MUNInstance
+                            .First(x => x.MUNAccessCode == 1).CouncilInformationList
+                            .First(x => x.CouncilName == "Security").Resolutions.First(x => x.Title == "T1").Id, NewText = "11" });
+
                 await _context.SaveChangesAsync();
             }
+            return RedirectToAction(nameof(Index));
+
+        }
+
+        //[Authorize(Policy = "IsAdminOfMUN")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> Index()
+        {
             return View(await _context.MUNInstance.ToListAsync());
         }
 

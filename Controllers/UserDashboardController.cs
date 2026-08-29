@@ -57,21 +57,48 @@ namespace MUNAdmin.Controllers
             }
 
             //Set the current council based on the input and error if it cant be found
-            DelegationCouncil? currentCouncil = userDelegation.CouncilList.FirstOrDefault(x => x.Council.CouncilName == council);
-            if (currentCouncil == null)
+            DelegationCouncil? currentDelegationCouncil = userDelegation.CouncilList.FirstOrDefault(x => x.Council.CouncilName == council);
+            if (currentDelegationCouncil == null)
             {
                 TempData["Error"] = "Can't find the specificed council";
                 return RedirectToAction("Error", "Home");
             }
 
             //Send extra data to the view to properly display the dashboard
-            ViewData["CurrentCouncil"] = council;
             ViewData["ParticipatingCouncils"] = participatingCouncilNames;
-            ViewData["CurrentCouncilInformation"] = currentMUNInstance.CouncilInformationList.First(x => x.CouncilName == council);
+            CouncilInformation currentCouncilInformation = currentMUNInstance.CouncilInformationList.First(x => x.CouncilName == council);
+            ViewData["CurrentCouncilInformation"] = currentCouncilInformation;
             ViewData["MUNTitle"] = currentMUNInstance.MUNTitle;
             ViewData["DelegationInstance"] = userDelegation;
 
-            return View(currentCouncil!);
+            List<List<Ammendment>> ammendmentsOnResolution = new List<List<Ammendment>>();
+
+            foreach (Resolution resolution in currentCouncilInformation.Resolutions)
+            {
+                List<Ammendment> ammendmentsOnSingleResolution = new List<Ammendment>();
+                foreach (DelegationInstance delegation in currentMUNInstance.DelegationList)
+                {
+                    DelegationCouncil? delegationCouncil = delegation.CouncilList.FirstOrDefault(x => x.Council.CouncilName == currentDelegationCouncil.Council.CouncilName);
+                    if (delegationCouncil == null)
+                    {
+                        break;
+                    }
+                    foreach (Ammendment ammendment in delegationCouncil.Ammendments)
+                    {
+                        if (ammendment.ResolutionID == resolution.Id)
+                        {
+                            ammendmentsOnSingleResolution.Add(ammendment);
+                        }
+                    }
+                }
+                ammendmentsOnResolution.Add(ammendmentsOnSingleResolution);
+            }
+
+            ViewData["AmmendmentsOnResolution"] = ammendmentsOnResolution;
+
+
+
+            return View(currentDelegationCouncil!);
         }
 
         [HttpPost]

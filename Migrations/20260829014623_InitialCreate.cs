@@ -33,9 +33,12 @@ namespace MUNAdmin.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     MUNInstanceId = table.Column<int>(type: "int", nullable: false),
+                    AcceptingAmmendments = table.Column<bool>(type: "bit", nullable: false),
+                    AcceptingRebuttals = table.Column<bool>(type: "bit", nullable: false),
                     CouncilName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PrimaryColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SecondaryColor = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    GradientPrimaryColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    GradientSecondaryColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsInSession = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
