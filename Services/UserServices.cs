@@ -40,5 +40,60 @@ namespace MUNAdmin.Services
             return User.FindFirstValue(LoginClaims.Role) == LoginClaims.DelegationRole;
         }
 
+        public List<List<Ammendment>> GetAllAmmendmentsOnCouncil(CouncilInformation council, MUNInstance munInstance)
+        {
+            List<List<Ammendment>> ammendmentsOnEachResolution = new List<List<Ammendment>>();
+            foreach (Resolution resolution in council.Resolutions)
+            {
+                List<Ammendment>? ammendmentsOnSingleResolution = GetAllAmmendmentsOnResolution(resolution, council, munInstance);
+                if (ammendmentsOnSingleResolution == null)
+                {
+                    continue;
+                }
+                ammendmentsOnEachResolution.Add(ammendmentsOnSingleResolution);
+            }
+            return ammendmentsOnEachResolution;
+
+        }
+
+        public List<Ammendment> GetAllAmmendmentsOnResolution(Resolution resolution, CouncilInformation council, MUNInstance munInstance)
+        {
+            List<Ammendment> ammendmentsOnResolution = new List<Ammendment>();
+
+
+            // Searches through every delegation 
+            foreach (DelegationInstance delegation in munInstance.DelegationList)
+            {
+                // Gets the provided council if possible
+                DelegationCouncil? delegationCouncil = delegation.CouncilList.FirstOrDefault(x => x.Council.CouncilName == council.CouncilName);
+                if (delegationCouncil == null)
+                {
+                    break;
+                }
+
+                //And returns any ammendments that match the current resolution
+                foreach (Ammendment ammendment in delegationCouncil.Ammendments)
+                {
+                    if (ammendment.ResolutionID == resolution.Id)
+                    {
+                        ammendmentsOnResolution.Add(ammendment);
+                    }
+                }
+            }
+            return ammendmentsOnResolution;
+        }
+
+        public List<String> GetDelegationsCouncilNames(DelegationInstance delegation)
+        {
+            //Generate a list of the councils the user is on
+            List<string> participatingCouncilNames = new List<string>();
+            for (int i = 0; i < delegation.CouncilList.Count(); i++)
+            {
+                participatingCouncilNames.Add(delegation.CouncilList[i].Council.CouncilName);
+            }
+
+            return participatingCouncilNames;
+        }
+
     }
 }

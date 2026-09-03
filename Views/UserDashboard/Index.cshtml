@@ -1,27 +1,12 @@
-﻿@model MUNAdmin.Models.DelegationCouncil
+﻿@model MUNAdmin.Models.ViewModels.DelegationDashboardViewModel
 
 @{
-    List<string> participatingCouncils = (List<string>)ViewData["ParticipatingCouncils"]!;
-    string MUNTitle = (string)ViewData["MUNTitle"]!;
-
-    //Delegation Information
-    DelegationInstance currentDelegation = (DelegationInstance)ViewData["DelegationInstance"]!;
-    string delegationCountry = currentDelegation.DelegationCountry;
-
-    //Council Information
-    CouncilInformation currentCouncilInformation = (CouncilInformation)ViewData["CurrentCouncilInformation"]!;
-    string gradientPrimaryColor = currentCouncilInformation.GradientPrimaryColor;
-    string gradientSecondaryColor = currentCouncilInformation.GradientSecondaryColor;
-    bool isSessionActive = currentCouncilInformation.IsInSession;
-    string currentCouncil = currentCouncilInformation.CouncilName;
-
-    List<List<Ammendment>> ammendmentsOnResolution = (List<List<Ammendment>>)ViewData["AmmendmentsOnResolution"]!;
 
 }
 
 <style>
     .council-bar {
-        background: linear-gradient(100deg, #@(gradientPrimaryColor), #@(gradientSecondaryColor));
+        background: linear-gradient(100deg, #@(Model.GradiantPrimaryColor), #@(Model.GradiantSecondaryColor));
         color: white;
         border-radius: 12px;
     }
@@ -66,13 +51,13 @@
                     </div>
 
                     <div>
-                        <h1 class="h5 fw-bold mb-0">@(MUNTitle)</h1>
+                        <h1 class="h5 fw-bold mb-0">@(Model.MUNTitle)</h1>
                         <div class="small text-secondary">Delegate Dashboard</div>
                     </div>
                 </div>
 
                 <div class="text-end d-none d-sm-block">
-                    <div class="fw-semibold small">@(delegationCountry)</div>
+                    <div class="fw-semibold small">@(Model.DelegationCountry)</div>
                     <div class="small text-secondary">Delegate</div>
                 </div>
 
@@ -85,20 +70,20 @@
         <div class="card-body p-2">
             <div class="d-flex gap-2 overflow-auto">
 
-                @for (int i = 0; i < participatingCouncils.Count; i++)
+                @for (int i = 0; i < Model.CouncilNames.Count; i++)
                 {
-                    if (participatingCouncils[i] == currentCouncil)
+                    if (Model.CouncilNames[i] == Model.CurrentCouncilName)
                     {
                         <button type="button"
                         class="flex-shrink-0 council-tab active">
-                            @(participatingCouncils[i])
+                            @(Model.CouncilNames[i])
                         </button>
                     }
                     else
                     {
                         <button type="button"
                                 class="flex-shrink-0 council-tab">
-                            @(participatingCouncils[i])
+                            @(Model.CouncilNames[i])
                         </button>
                     }
                 }
@@ -114,7 +99,7 @@
                 <div class="col">
                     <span class="badge bg-light bg-opacity-10 text-white rounded-pill mb-1">
 
-                        @if (isSessionActive)
+                        @if (Model.SessionActive)
                         {
                             <span class="d-inline-block rounded-circle me-1"
                                   style="width: 7px; height: 7px; background-color:#27f272"></span>
@@ -129,13 +114,13 @@
 
                     </span>
 
-                    <h2 class="h5 fw-bold mb-0">@(currentCouncil)</h2>
+                    <h2 class="h5 fw-bold mb-0">@(Model.CurrentCouncilName)</h2>
                     <div class="small opacity-75">Current council</div>
                 </div>
 
                 <div class="col-auto text-end">
                     <div class="small text-uppercase opacity-75">Representing</div>
-                    <div class="fw-bold">@(delegationCountry)</div>
+                    <div class="fw-bold">@(Model.DelegationCountry)</div>
                 </div>
 
             </div>
@@ -160,7 +145,7 @@
                             </div>
                         </div>
 
-                        <span class="small text-secondary">@(currentCouncilInformation.Resolutions.Count()) total</span>
+                        <span class="small text-secondary">@(Model.ParticipatingCouncil.Resolutions.Count()) total</span>
 
                     </div>
                 </div>
@@ -168,9 +153,9 @@
                 <div class="card-body p-3">
                     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-2">
 
-                        @for (int i = 0; i < currentCouncilInformation.Resolutions.Count(); i++)
+                        @for (int i = 0; i < Model.ParticipatingCouncil.Resolutions.Count(); i++)
                         {
-                            Resolution currentResolution = currentCouncilInformation.Resolutions[i];
+                            Resolution currentResolution = Model.ParticipatingCouncil.Resolutions[i];
                             <!-- Resolution 1 -->
                             <div class="col">
                                 <button type="button"
@@ -194,7 +179,7 @@
                                         <div class="d-flex justify-content-between align-items-center
                                                 border-top mt-auto pt-2">
                                             <span class="small text-secondary">
-                                                @(ammendmentsOnResolution[i].Count()) Ammendments
+                                                @(Model.AmmendmentsOnResolutions[i].Count()) Ammendments
                                             </span>
                                             <span class="small fw-bold text-primary">View →</span>
                                         </div>
@@ -308,9 +293,9 @@
 
 <!-- Resolution Modal -->
 
-@for (int i = 0; i < currentCouncilInformation.Resolutions.Count(); i++)
+@for (int i = 0; i < Model.ParticipatingCouncil.Resolutions.Count(); i++)
 {
-    Resolution currentResolution = currentCouncilInformation.Resolutions[i];
+    Resolution currentResolution = Model.ParticipatingCouncil.Resolutions[i];
     <div class="modal fade"
     id=@("ResolutionPopup" + i)
     tabindex="-1"

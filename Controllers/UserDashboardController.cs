@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MUNAdmin.Data;
 using MUNAdmin.Models;
 using MUNAdmin.Models.LoginModels;
+using MUNAdmin.Models.ViewModels;
 using MUNAdmin.Services;
 using System.Diagnostics;
 using System.Linq;
@@ -37,11 +38,7 @@ namespace MUNAdmin.Controllers
             }
 
             //Generate a list of the councils the user is on
-            List<string> participatingCouncilNames = new List<string>();
-            for (int i = 0; i < userDelegation.CouncilList.Count(); i++)
-            {
-                participatingCouncilNames.Add(userDelegation.CouncilList[i].Council.CouncilName);
-            }
+            List<string> participatingCouncilNames = _userServices.GetDelegationsCouncilNames(userDelegation);
 
             //Error if they are on no councils
             if (participatingCouncilNames.Count() == 0)
@@ -64,41 +61,18 @@ namespace MUNAdmin.Controllers
                 return RedirectToAction("Error", "Home");
             }
 
-            //Send extra data to the view to properly display the dashboard
-            ViewData["ParticipatingCouncils"] = participatingCouncilNames;
             CouncilInformation currentCouncilInformation = currentMUNInstance.CouncilInformationList.First(x => x.CouncilName == council);
-            ViewData["CurrentCouncilInformation"] = currentCouncilInformation;
-            ViewData["MUNTitle"] = currentMUNInstance.MUNTitle;
-            ViewData["DelegationInstance"] = userDelegation;
-
-            List<List<Ammendment>> ammendmentsOnResolution = new List<List<Ammendment>>();
-
-            foreach (Resolution resolution in currentCouncilInformation.Resolutions)
-            {
-                List<Ammendment> ammendmentsOnSingleResolution = new List<Ammendment>();
-                foreach (DelegationInstance delegation in currentMUNInstance.DelegationList)
-                {
-                    DelegationCouncil? delegationCouncil = delegation.CouncilList.FirstOrDefault(x => x.Council.CouncilName == currentDelegationCouncil.Council.CouncilName);
-                    if (delegationCouncil == null)
-                    {
-                        break;
-                    }
-                    foreach (Ammendment ammendment in delegationCouncil.Ammendments)
-                    {
-                        if (ammendment.ResolutionID == resolution.Id)
-                        {
-                            ammendmentsOnSingleResolution.Add(ammendment);
-                        }
-                    }
-                }
-                ammendmentsOnResolution.Add(ammendmentsOnSingleResolution);
-            }
-
-            ViewData["AmmendmentsOnResolution"] = ammendmentsOnResolution;
 
 
+            //Send extra data to the view to properly display the dashboard
+            DelegationDashboardViewModel viewModel = new DelegationDashboardViewModel() {
+                ActiveDelegation = userDelegation,
+                AmmendmentsOnResolutions = _userServices.GetAllAmmendmentsOnCouncil(currentCouncilInformation, currentMUNInstance)!,
+                MUNTitle = currentMUNInstance.MUNTitle,
+                ParticipatingCouncil = currentCouncilInformation
+            };
 
-            return View(currentDelegationCouncil!);
+            return View(viewModel!);
         }
 
         [HttpPost]
