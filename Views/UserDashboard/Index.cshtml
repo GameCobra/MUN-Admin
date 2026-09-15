@@ -81,10 +81,19 @@
                     }
                     else
                     {
-                        <button type="button"
-                                class="flex-shrink-0 council-tab">
-                            @(Model.CouncilNames[i])
-                        </button>
+
+                        <form asp-action="Index"
+                              asp-controller="UserDashboard"
+                              method="get">
+
+                            <input type="hidden"
+                                   name="council"
+                                   value="@Model.CouncilNames[i]" />
+
+                            <button type="submit" class="flex-shrink-0 council-tab">
+                                @Model.CouncilNames[i]
+                            </button>
+                        </form>
                     }
                 }
             </div>
