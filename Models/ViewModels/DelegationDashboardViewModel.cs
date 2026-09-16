@@ -14,5 +14,7 @@
         public string GradiantSecondaryColor => ParticipatingCouncil.GradientSecondaryColor;
         public bool SessionActive => ParticipatingCouncil.IsInSession;
         public string CurrentCouncilName => ParticipatingCouncil.CouncilName;
+        public DelegationCouncil ParticipatingDelegationCouncil => ActiveDelegation.CouncilList.First(x => x.Council.CouncilName == CurrentCouncilName);
+
     }
 }

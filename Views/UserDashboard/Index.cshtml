@@ -142,6 +142,7 @@
         <!-- Resolutions -->
         <div class="col-lg-8">
 
+            <!-- Resolution Section Header -->
             <div class="card border rounded-3 h-100">
 
                 <div class="card-header bg-white py-3 px-3">
@@ -179,7 +180,9 @@
                                             @(currentResolution.Code)
                                         </span>
 
-                                        <div class="fw-bold mt-2">@(currentResolution.Title)</div>
+                                        <div class="fw-bold mt-2">
+                                            @(currentResolution.Title)
+                                        </div>
 
                                         <div class="small text-secondary mt-1">
                                             @(currentResolution.BodyText)
@@ -316,8 +319,18 @@
 
                 <div class="modal-header">
                     <div>
-                        <div class="small fw-bold text-primary">C1</div>
-                        <h5 class="modal-title">T1</h5>
+                        <span class="badge text-primary align-self-start"
+                              style="background-color:#eff6ff; color:#2563eb">
+                            @(currentResolution.Code)
+                        </span>
+                        <!--
+                        <div class="small fw-bold text-primary">
+                            @(currentResolution.Code)
+                        </div>
+                        -->
+                        <h5 class="modal-title">
+                            @(currentResolution.Title)
+                        </h5>
                     </div>
 
                     <button type="button"
@@ -330,15 +343,21 @@
                 <div class="modal-body">
 
                     <div class="bg-body-tertiary border rounded-3 p-3 mb-3">
-                        This is where the complete resolution text would be displayed.
+                        @(currentResolution.BodyText)
                     </div>
+
+                    @for (int j = 0; j < Model.ParticipatingDelegationCouncil.Ammendments.FindAll(x => x.ResolutionID == currentResolution.Id).Count(); j++)
+                    {
+                        //List ammendments
+                    }
 
                     <div class="d-flex justify-content-between align-items-center">
 
                         <div>
                             <strong>Amendments</strong>
-                            <div class="small text-secondary">2 amendments submitted</div>
+                            <div class="small text-secondary">@(Model.AmmendmentsOnResolutions[i].Count()) amendments submitted</div>
                         </div>
+
 
                         <button type="button"
                         class="btn btn-primary"
