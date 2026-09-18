@@ -214,68 +214,49 @@
                 <div class="card-body p-3">
 
                     <div class="small fw-bold text-uppercase text-secondary mb-2">
-                        Actions
+                        General
                     </div>
 
                     <button type="button"
-                            class="btn btn-danger bg-danger-subtle text-danger border-0
-                                   w-100 text-start mb-2 p-2"
+                            class="btn btn-light border w-100 text-start mb-2 p-2"
                             data-bs-toggle="modal"
                             data-bs-target="#RebuttalModal">
-
-                        <span class="fw-bold d-block">Request Rebuttal</span>
-                        <span class="small">Request speaking time</span>
-
-                    </button>
-
-                    <button type="button"
-                            class="btn btn-light border w-100 text-start mb-2 p-2">
                         <span class="badge text-primary me-2"
-                              style="background-color:#eff6ff; color:#2563eb">?</span>
+                              style="background-color:#eff6ff; color:#2563eb">
+                              ?
+                        </span>
                         <span>
-                            <span class="fw-semibold d-block small">Council Information</span>
+                            <span class="fw-semibold d-block small">
+                                Request Rebuttal
+                            </span>
                             <span class="text-secondary" style="font-size: .75rem;">
-                                View council details
+                                Request speaking time
                             </span>
                         </span>
                     </button>
 
-                    <button type="button"
-                            class="btn btn-light border w-100 text-start p-2">
-                        <span class="badge text-primary me-2"
-                              style="background-color:#eff6ff; color:#2563eb">#</span>
-                        <span>
-                            <span class="fw-semibold d-block small">My Delegation</span>
-                            <span class="text-secondary" style="font-size: .75rem;">
-                                View delegation details
-                            </span>
-                        </span>
-                    </button>
-
-                </div>
-
-                <div class="border-top"></div>
-
-                <!-- Session -->
-                <div class="card-body p-3">
-
-                    <div class="small fw-bold text-uppercase text-secondary mb-2">
-                        Session
-                    </div>
 
                     <div class="row g-2">
 
                         <div class="col-6">
                             <div class="bg-body-tertiary rounded-2 p-2">
-                                <div class="small text-secondary">STATUS</div>
-                                <div class="fw-bold text-success small">Active</div>
+                                <div class="small text-secondary">
+                                    Rebuttals
+                                </div>
+                                <div class="fw-bold text-success small">
+                                    @(Model.ParticipatingCouncil.AcceptingRebuttals == true ? "Accepting" : "Closed")
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-6">
                             <div class="bg-body-tertiary rounded-2 p-2">
-                                <div class="small text-secondary">RESOLUTIONS</div>
-                                <div class="fw-bold small">6</div>
+                                <div class="small text-secondary">
+                                    Ammendments
+                                </div>
+                                <div class="fw-bold small">
+                                    <!-- Put Something here -->
+                                </div>
                             </div>
                         </div>
 
@@ -292,6 +273,17 @@
                                 <div class="fw-bold small">Canada</div>
                             </div>
                         </div>
+
+                    </div>
+
+                    <!-- Session -->
+                    <div class="card-body p-3">
+
+                        <div class="small fw-bold text-uppercase text-secondary mb-2">
+                            Session
+                        </div>
+
+                    
 
                     </div>
                 </div>

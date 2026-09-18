@@ -11,7 +11,6 @@ namespace MUNAdmin.Models
         //Critical Functional Information
         [Required]
         public List<Resolution> Resolutions { get; set; } = [];
-        public bool AcceptingAmmendments { get; set; }
         public bool AcceptingRebuttals { get; set; } 
 
         // Visual Data
