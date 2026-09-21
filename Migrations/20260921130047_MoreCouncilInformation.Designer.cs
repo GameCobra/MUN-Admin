@@ -3,6 +3,7 @@ using MUNAdmin.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MUNAdmin.Migrations
 {
     [DbContext(typeof(MUNAdminContext))]
-    partial class MUNAdminContextModelSnapshot : ModelSnapshot
+    [Migration("20260921130047_MoreCouncilInformation")]
+    partial class MoreCouncilInformation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,11 @@ namespace MUNAdmin.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CurrentActivity")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CurrentSpeakingCountry")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradientPrimaryColor")
@@ -57,6 +62,7 @@ namespace MUNAdmin.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RebuttalingCountry")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
