@@ -174,11 +174,19 @@
                                 data-bs-target=@("#ResolutionPopup" + i)>
 
                                     <div class="d-flex flex-column h-100">
-
-                                        <span class="badge text-primary align-self-start"
-                                        style="background-color:#eff6ff; color:#2563eb">
-                                            @(currentResolution.Code)
-                                        </span>
+                                        <div>
+                                            <span class="badge text-primary align-self-start"
+                                            style="background-color:#eff6ff; color:#2563eb">
+                                                @(currentResolution.Code)
+                                            </span>
+                                            @if (Model.ParticipatingCouncil.CurrentResolutionID == currentResolution.Id)
+                                            {
+                                                <span class="badge text-primary align-self-start"
+                                                style="background-color:#eff6ff; color:#42f584">
+                                                    Current
+                                                </span>
+                                            }
+                                        </div>
 
                                         <div class="fw-bold mt-2">
                                             @(currentResolution.Title)

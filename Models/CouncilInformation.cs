@@ -12,7 +12,7 @@ namespace MUNAdmin.Models
         [Required]
         public List<Resolution> Resolutions { get; set; } = [];
         public bool AcceptingRebuttals { get; set; }
-
+        public int? CurrentResolutionID { get; set; } = null;
 
         // Visual Data
         public required string CouncilName { get; set; }
