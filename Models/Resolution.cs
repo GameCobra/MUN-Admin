@@ -11,5 +11,7 @@ namespace MUNAdmin.Models
         public string Title { get; set; } = "";
 
         public string BodyText { get; set; } = "";
+        public int MaxAmmendmentsPerDelegaton { get; set; } = 1;
+        public bool AcceptingAmmendments { get; set; } = true;
     }
 }

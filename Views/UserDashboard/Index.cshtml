@@ -151,11 +151,11 @@
                         <div>
                             <div class="fw-bold">Resolutions</div>
                             <div class="small text-secondary">
-                                Click a resolution to view or propose amendments
+                                Click a resolution to view it or to propose amendments
                             </div>
                         </div>
 
-                        <span class="small text-secondary">@(Model.ParticipatingCouncil.Resolutions.Count()) total</span>
+                        <span class="small text-secondary">@(Model.ParticipatingCouncil.Resolutions.Count()) Resolutions</span>
 
                     </div>
                 </div>
@@ -192,17 +192,19 @@
                                             @(currentResolution.Title)
                                         </div>
 
-                                        <div class="small text-secondary mt-1">
-                                            @(currentResolution.BodyText)
-                                        </div>
+                                        <!--<div class="small text-secondary mt-1">
+                                            (currentResolution.BodyText)
+                                        </div>-->
 
                                         <div class="d-flex justify-content-between align-items-center
                                                 border-top mt-auto pt-2">
                                             <span class="small text-secondary">
-                                                @(Model.AmmendmentsOnResolutions[i].Count()) Ammendments
+                                                <!--(Model.AmmendmentsOnResolutions[i].Count()) Ammendments-->
+                                                @(Model.ParticipatingDelegationCouncil.Ammendments.Where(x => x.ResolutionID == currentResolution.Id).Count())/@(currentResolution.MaxAmmendmentsPerDelegaton) Submited Ammendments
                                             </span>
-                                            <span class="small fw-bold text-primary">View →</span>
+                                            
                                         </div>
+                                        <!--<span class="small fw-bold text-primary text-end">View →</span>-->
 
                                     </div>
                                 </button>
@@ -344,7 +346,8 @@
 
                         <div>
                             <strong>Amendments</strong>
-                            <div class="small text-secondary">@(Model.AmmendmentsOnResolutions[i].Count()) amendments submitted</div>
+                            <!--<div class="small text-secondary">@(Model.AmmendmentsOnResolutions[i].Count()) Total Amendments Submitted</div>-->
+                            <div class="small text-secondary">@(Model.ParticipatingDelegationCouncil.Ammendments.Where(x => x.ResolutionID == currentResolution.Id).Count())/@(currentResolution.MaxAmmendmentsPerDelegaton) Submited Ammendments</div>
                         </div>
 
 
